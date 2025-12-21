@@ -42,9 +42,14 @@ print("Row vector (matrix form):")
 print(v_row)
 
 # Sequence vector
-v_seq <- 1:5
+v_seq1 <- 1:5
 print("Sequence vector:")
-print(v_seq)
+print(v_seq1)
+
+v_seq2 <- seq(6,10)
+print("Sequence vector:")
+print(v_seq2)
+
 
 # Repeated sequence
 v_rep <- rep(1:3, times = 2)

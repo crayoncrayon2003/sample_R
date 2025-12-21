@@ -53,7 +53,7 @@ print("# 3. Column-major order")
 print("############################################################")
 
 # R fills matrices by columns (column-major order)
-m_col <- matrix(1:6, nrow = 2)
+m_col <- matrix(1:6, nrow = 2, byrow = FALSE)
 print(m_col)
 
 # Fill by row

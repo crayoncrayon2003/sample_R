@@ -22,6 +22,17 @@ print(df[1, ])
 print("############################################################")
 print("# 3. Summary")
 print("############################################################")
+mat <- matrix(1:6, nrow = 2, ncol = 3, byrow = TRUE)
+colnames(mat) <- c("A", "B", "C")
+rownames(mat) <- c("Row1", "Row2")
+
+df <- as.data.frame(mat)
+
+print(df)
+
+print("############################################################")
+print("# 4. Summary")
+print("############################################################")
 
 print("Vector: 1D, same type (mathematical vector)")
 print("Matrix: 2D, same type (mathematical matrix)")

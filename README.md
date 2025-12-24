@@ -30,6 +30,9 @@ $ R --version
 ## Install R Packages
 ```
 $ R
+> install.packages("remotes")
+> install.packages("vscDebugger", repos = "https://manuelhentschel.r-universe.dev")
+> remotes::install_github("ManuelHentschel/vscDebugger")
 > install.packages("ggplot2")
 > install.packages("dplyr")
 > install.packages("jsonlite")
@@ -41,6 +44,7 @@ $ R
 ## Confirm R Packages
 ```
 $ R
+> library("remotes")
 > library(ggplot2)
 > library(dplyr)
 > library(jsonlite)
@@ -48,3 +52,4 @@ $ R
 > library("httr")
 > library("shiny")
 ```
+

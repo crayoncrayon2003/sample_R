@@ -13,8 +13,8 @@ print("############################################################")
 print("# 2. Make a GET request")
 print("############################################################")
 
-# Example: request to GitHub API
-url <- "https://api.github.com/repos/r-lib/httr"
+
+url <- "http://127.0.0.1:5000/test-get"
 
 response <- GET(url)
 
@@ -44,5 +44,5 @@ print("# 4. POST request example (dummy)")
 print("############################################################")
 
 # POST example (httpbin.org echo endpoint)
-post_response <- POST("https://httpbin.org/post", body = list(name = "Alice", score = 100), encode = "json")
+post_response <- POST("http://127.0.0.1:5000/test-post", body = list(name = "Alice", score = 100), encode = "json")
 print(content(post_response, as = "parsed"))

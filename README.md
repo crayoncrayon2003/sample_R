@@ -16,6 +16,11 @@ sudo add-apt-repository "deb https://cloud.r-project.org/bin/linux/ubuntu $(lsb_
 sudo apt install --no-install-recommends r-base
 ```
 
+### Install Dependencies
+```
+sudo apt install libcurl4-openssl-dev libssl-dev
+```
+
 ### Confirm version
 ```
 $ R --version

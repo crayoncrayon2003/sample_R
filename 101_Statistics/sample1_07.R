@@ -1,75 +1,74 @@
 
 main <- function() {
-  cat(" ######## 母集団データを作る ######## ", "\n")
-  set.seed(123)
+  cat("########################", "\n")
+  cat("二項分布", "\n")
+  # 硬貨を6回投げる
 
-  N <- 1000
-  population <- data.frame(
-    id     = 1:N,
-    sex    = sample(c("M", "F"), N, replace = TRUE),
-    region = sample(paste0("R", 1:10), N, replace = TRUE),
-    value  = rnorm(N, mean = 50, sd = 10)
-  )
-  cat(head(population$value, 15), "\n")
+  n <- 6    # 試行回数
+  p <- 0.5  # 表が出る確率
 
+  # 4回以上表が出る確率
+  # pbinom(3, ...) は「3回以下」の確率なので、1から引くことで「4回以上」を出す
+  prob_4plus <- 1 - pbinom(3, size = n, prob = p)
 
-  cat(" ######## 単純無作為抽出 ######## ", "\n")
-  n <- 100
-  sample_srs <- population[sample(N, n), ]
-  cat(sample_srs$value, "\n")
-  cat(mean(sample_srs$value), "\n")
+  # ② 平均（期待値）
+  E <- n * p
 
+  # ③ 分散
+  V <- n * p * (1 - p)
 
-  cat(" ######## 層化抽出 ######## ", "\n")
-  n_each <- 50
-  sample_stratified <- do.call(
-    rbind,
-    lapply(split(population, population$sex), function(df) {
-      df[sample(nrow(df), n_each), ]
-    })
-  )
-  cat(sample_stratified$value, "\n")
-  cat(mean(sample_stratified$value), "\n")
+  cat("4回以上出る確率 :", prob_4plus, "\n")
+  cat("平均（期待値）  :", E, "回\n")
+  cat("分散           :", V, "\n")
 
-  cat(" ######## 多段抽出 ######## ", "\n")
-  # 第1段階：地域を抽出
-  regions_selected <- sample(unique(population$region), 3)
+  cat("########################", "\n")
+  cat("ポアソン分布", "\n")
+  # 条件設定
+  n <- 300
+  p <- 0.5
+  lambda <- n * p  # 平均150回
 
-  # 第2段階：地域内から抽出
-  sample_multistage <- do.call(
-    rbind,
-    lapply(regions_selected, function(r) {
-      df <- subset(population, region == r)
-      df[sample(nrow(df), 20), ]
-    })
-  )
-  cat(sample_stratified$value, "\n")
-  cat(mean(sample_multistage$value), "\n")
+  # 比較する「表が出る回数」の範囲（平均150の前後）
+  x <- 120:180
 
+  # それぞれの確率密度を計算
+  prob_binomial <- dbinom(x, size = n, prob = p)
+  prob_poisson  <- dpois(x, lambda = lambda)
 
-  cat(" ######## 集落抽出 ######## ", "\n")
-  clusters_selected <- sample(unique(population$region), 3)
+  # グラフで比較
+  plot(x, prob_binomial, type = "l", col = "blue", lwd = 2,
+      main = "二項分布 vs ポアソン分布 (n=300, p=0.5)",
+      xlab = "表が出る回数", ylab = "確率")
+  lines(x, prob_poisson, col = "red", lwd = 2, lty = 2)
+  legend("topright", legend = c("二項分布", "ポアソン分布"),
+        col = c("blue", "red"), lty = c(1, 2), lwd = 2)
 
-  sample_cluster <- subset(
-    population,
-    region %in% clusters_selected
-  )
-  cat(sample_cluster$value, "\n")
-  cat(mean(sample_cluster$value), "\n")
+  cat("########################", "\n")
+  cat("幾何分布", "\n")
+  p <- 0.5  # 表が出る確率
 
-  cat(" ######## 系統抽出 ######## ", "\n")
-  n <- 100
-  k <- floor(N / n)
+  # 1. 期待値（表が出るまでに累積する「裏」の回数の平均）
+  # 公式： (1-p) / p
+  E <- (1 - p) / p
 
-  start <- sample(1:k, 1)
-  indices <- seq(start, by = k, length.out = n)
+  # 2. 4回以上投げてもまだ表が出ない確率
+  # つまり「3回連続で裏が出る」確率を1から引くか、
+  # あるいは「4回目以降に初めて表が出る」確率を計算します。
+  # pgeom(2, p) は「裏が0, 1, 2回（＝3回目までに表が出る）」確率
+  prob_4_or_more <- 1 - pgeom(2, prob = p)
 
-  sample_systematic <- population[indices, ]
-  cat(sample_systematic$value, "\n")
-  cat(mean(sample_systematic$value), "\n")
+  # 3. 分散
+  # 公式： (1-p) / p^2
+  V <- (1 - p) / (p^2)
 
-
+  cat("1. 表が出るまでの「裏」の回数（平均）:", E, "回\n")
+  cat("   (つまり平均", E + 1, "回目に表が出る)\n\n")
+  cat("2. 4回以上投げても表が出ない確率    :", prob_4_or_more * 100, "%\n")
+  cat("   (4連続以上裏が出る確率と同じ)\n\n")
+  cat("3. 分散                             :", V, "\n")
+  cat("   標準偏差                         :", sqrt(V), "\n")
 }
+
 
 
 main()

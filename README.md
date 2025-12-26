@@ -18,7 +18,9 @@ sudo apt install --no-install-recommends r-base
 
 ### Install Dependencies
 ```
-sudo apt install libcurl4-openssl-dev libssl-dev libmariadb-dev libpq-dev install libssl-dev libsasl2-dev
+sudo apt update
+sudo apt install build-essential g++ cmake libssl-dev libxml2-dev \
+    libxml2-dev libxslt-dev libssl-dev libmariadb-dev libpq-dev libssl-dev libsasl2-dev libcurl4-openssl-dev
 ```
 
 ### Confirm version

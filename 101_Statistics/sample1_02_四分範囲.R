@@ -1,20 +1,4 @@
-# ディレクトリの取得
-get_script_dir <- function() {
-  if (!is.null(sys.frames()[[1]]$ofile)) {
-    return(dirname(normalizePath(sys.frames()[[1]]$ofile)))
-  }
-
-  args <- commandArgs(trailingOnly = FALSE)
-  file_arg <- grep("--file=", args, value = TRUE)
-  if (length(file_arg) > 0) {
-    return(dirname(normalizePath(sub("--file=", "", file_arg))))
-  }
-
-  normalizePath(".")
-}
-
 main <- function() {
-  # CSVファイルパスの読込み
   df <- data.frame(
     score = c(41, 43, 46, 47, 48, 56, 58, 71, 72, 78, 79, 81, 86, 88, 89)
   )

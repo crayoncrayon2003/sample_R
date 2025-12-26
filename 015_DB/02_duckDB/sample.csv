@@ -1,0 +1,7 @@
+order_id,category,amount,order_date
+1,Food,1200,2024-01-01
+2,Food,800,2024-01-02
+3,Books,1500,2024-01-03
+4,Books,2000,2024-01-03
+5,Clothing,3000,2024-01-04
+6,Clothing,2500,2024-01-05

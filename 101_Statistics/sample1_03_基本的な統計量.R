@@ -1,17 +1,3 @@
-# ディレクトリの取得
-get_script_dir <- function() {
-  if (!is.null(sys.frames()[[1]]$ofile)) {
-    return(dirname(normalizePath(sys.frames()[[1]]$ofile)))
-  }
-
-  args <- commandArgs(trailingOnly = FALSE)
-  file_arg <- grep("--file=", args, value = TRUE)
-  if (length(file_arg) > 0) {
-    return(dirname(normalizePath(sub("--file=", "", file_arg))))
-  }
-
-  normalizePath(".")
-}
 
 # 最頻値（自作関数）
 mode_value <- function(x) {

@@ -20,7 +20,7 @@ sudo apt install --no-install-recommends r-base
 ```
 sudo apt update
 sudo apt install build-essential g++ cmake libssl-dev libxml2-dev \
-    libxml2-dev libxslt-dev libssl-dev libmariadb-dev libpq-dev libssl-dev libsasl2-dev libcurl4-openssl-dev
+    libxml2-dev libxslt-dev libssl-dev libmariadb-dev libpq-dev libssl-dev libsasl2-dev libcurl4-openssl-dev gfortran libblas-dev liblapack-dev
 ```
 
 ### Confirm version
@@ -46,6 +46,7 @@ $ R
 > install.packages("purrr")
 > install.packages("httr")
 > install.packages("shiny")
+> install.packages("lavaan")
 ```
 
 ## Confirm R Packages
@@ -58,5 +59,6 @@ $ R
 > library("purrr")
 > library("httr")
 > library("shiny")
+> library(lavaan)
 ```
 

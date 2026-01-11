@@ -52,6 +52,9 @@ process_seeing_1 <- function(data) {
   damage <- data$bucket_damage
   sales  <- data$bucket_sales
 
+  # 観測量：
+  # ・P(Y | X1)
+  # ・P(Y | X1=1) または P(Y | X1=0)
   predicted_sales <- ifelse(
     damage == 1,
     mean(sales[damage == 1]),
@@ -89,10 +92,22 @@ process_seeing_2 <- function(data) {
 
   sales <- data$bucket_sales
 
+  # 観測量：
+  # ・P(Y | X1, Z)
+  # ・P(Y | X1 = x, Z = z)
+  # ここで：
+  #   Y  = bucket_sales
+  #   X1 = bucket_damage
+  #   Z  = mice
+
+  # bucket_damageとmiceの値を連結して、4パターン（ {0 0}, {1 0}, {0 1}, {1 1}）に分類
   key <- paste(data$bucket_damage, data$mice)
-
+  # 4パターン ごとに bucket_sales の平均値を集計
   mu <- tapply(sales, key, mean)
-
+  # μ["00"]=E[Y∣X1​=0,Z=0]
+  # μ["01"]=E[Y∣X1​=0,Z=1]
+  # μ["10"]=E[Y∣X1​=1,Z=0]
+  # μ["11"]=E[Y∣X1​=1,Z=1]
   predicted_sales <- mu[key]
 
   score <- -mean((sales - predicted_sales)^2)
@@ -127,6 +142,9 @@ process_seeing_3 <- function(data) {
   mice  <- data$mice
   sales <- data$bucket_sales
 
+  # 観測量：
+  # ・P(Y | X1)
+  # ・P(Y | X1=1) または P(Y | X1=0)
   predicted_sales <- ifelse(
     mice == 1,
     mean(sales[mice == 1]),
@@ -162,6 +180,8 @@ process_seeing_4 <- function(data) {
 
   sales <- data$bucket_sales
 
+  # 観測量：
+  # 2の7乗パターン（128パターン）に分類
   key <- paste(
     data$wind,
     data$dust,
@@ -171,7 +191,7 @@ process_seeing_4 <- function(data) {
     data$mice,
     data$bucket_damage
   )
-
+  # 128パターン ごとに bucket_sales の平均値を集計
   mu <- tapply(sales, key, mean)
 
   predicted_sales <- mu[key]
@@ -208,49 +228,9 @@ select_best_model <- function(seeing_results) {
 }
 
 # ===============================
-# 介入1（do(wind=0)）
-# ===============================
-process_doing_1 <- function(data, model) {
-  n <- nrow(data)
-
-  wind <- rep(0, n)
-
-  dust <- rbinom(n, 1, ifelse(wind == 1, 0.7, 0.1))
-  blind <- rbinom(n, 1, ifelse(dust == 1, 0.6, 0.05))
-  shamisen <- rbinom(n, 1, ifelse(blind == 1, 0.8, 0.1))
-  cats <- rbinom(n, 1, ifelse(shamisen == 1, 0.7, 0.2))
-  mice <- rbinom(n, 1, ifelse(cats == 1, 0.2, 0.8))
-  damage <- rbinom(n, 1, ifelse(mice == 1, 0.7, 0.1))
-  sales <- rbinom(n, 1, ifelse(damage == 1, 0.8, 0.2))
-
-  cat("doing_1 (do wind=0): mean outcome =", mean(sales), "\n")
-  sales
-}
-
-# ===============================
-# 介入2（do(wind=1)）
-# ===============================
-process_doing_2 <- function(data, model) {
-  n <- nrow(data)
-
-  wind <- rep(1, n)
-
-  dust <- rbinom(n, 1, ifelse(wind == 1, 0.7, 0.1))
-  blind <- rbinom(n, 1, ifelse(dust == 1, 0.6, 0.05))
-  shamisen <- rbinom(n, 1, ifelse(blind == 1, 0.8, 0.1))
-  cats <- rbinom(n, 1, ifelse(shamisen == 1, 0.7, 0.2))
-  mice <- rbinom(n, 1, ifelse(cats == 1, 0.2, 0.8))
-  damage <- rbinom(n, 1, ifelse(mice == 1, 0.7, 0.1))
-  sales <- rbinom(n, 1, ifelse(damage == 1, 0.8, 0.2))
-
-  cat("doing_2 (do wind=1): mean outcome =", mean(sales), "\n")
-  sales
-}
-
-# ===============================
 # seeing_4 用の介入関数（do(wind=指定値)）
 # ===============================
-process_doing_seeing_4 <- function(data, wind_do) {
+process_doing_based_on_seeing_4 <- function(data, wind_do) {
   n <- nrow(data)
 
   wind <- rep(wind_do, n)
@@ -304,8 +284,8 @@ main <- function() {
   best_model <- select_best_model(seeing_results)
 
   # ベストモデルを使って介入効果の推定
-  process_doing_1(data, best_model)
-  process_doing_2(data, best_model)
+  process_doing_based_on_seeing_4(data,0)
+  process_doing_based_on_seeing_4(data,1)
 
   cat("観測１・観測２・観測３・観測４は、何らかの基準（例えばscore）を使えば、モデルの評価が可能になる。\n")
   cat("ただし、観測１・観測２・観測３・観測４は、仮設している構造方程式が異なる= もそも仮説した前提が異なる\n")

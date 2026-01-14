@@ -47,6 +47,7 @@ $ R
 > install.packages("httr")
 > install.packages("shiny")
 > install.packages("lavaan")
+> install.packages("neuralnet")
 ```
 
 ## Confirm R Packages
@@ -60,5 +61,6 @@ $ R
 > library("httr")
 > library("shiny")
 > library(lavaan)
+> library(neuralnet)
 ```
 

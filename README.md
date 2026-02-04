@@ -70,7 +70,7 @@ $ R
 ```bash
 sudo apt update
 sudo apt upgrade
-sudo apt install jupyter-notebook jupyter-client jupyter-core
+sudo apt install jupyter-notebook jupyter-client jupyter-core jupyter-nbconvert
 sudo apt install r-base r-base-dev
 ```
 
